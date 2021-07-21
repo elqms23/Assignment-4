@@ -74,25 +74,29 @@ function countdown() {
 function showScore(a){
     show(resultWin);
     hide(quiz);
-    hide(timer);
+    hide(header);
     scoreText.textContent = a;
 }
 function startQuiz(){
     hide(intro);
+    hide(result);
+    show(timer);
     show(quiz);
-    
+    currentQ = {};
+    IndexQ = 0;
     question_box = questions;
     console.log(question_box)
     newQ();
 }
 var currentQ={}
-var IndexQ = 0
+var IndexQ = 0;
 var containerQ = document.getElementById('question')
 var ansMark = document.getElementById('cards')
 
 function newQ(){
     currentQ =question_box[IndexQ];
     containerQ.innerText = currentQ.title;
+    show(result);
     
     for (i=0; i<currentQ.choices.length; i++){
         console.log(currentQ)
@@ -100,8 +104,8 @@ function newQ(){
         button.innerText = currentQ.choices[i];
         button.setAttribute('class','btn');
         button.addEventListener('click',function(event){
-            resetQ();
-            checkAns(event);}
+            checkAns(event);
+            resetQ();}
         );
         ansMark.appendChild(button);
 
@@ -130,6 +134,8 @@ function checkAns(event) {
     
     var selectedEl = event.target;
     var selected = selectedEl.innerText;
+    console.log(selected);
+    console.log(currentQ.answer)
 
     
     if (result.firstChild !== null) {
@@ -160,6 +166,7 @@ function resetQuiz() {
     show(header);
     show(intro);
     hide(noScore);
+    hide(quiz);
 
     while (ansMark.firstChild){
         ansMark.removeChild(ansMark.firstChild);
@@ -198,8 +205,19 @@ function clearScore() {
     show(noScore);
     
 }
-
-
+function recordList(){
+    hide(quiz);
+    hide(intro);
+    hide(header);
+    
+    show(scoreContainer);
+    if (isEmpty('list')) {
+        show(noScore);}
+    
+}
+function isEmpty(id) {
+    return document.getElementById(id).innerHTML.trim() == ""
+  }
 
 
 // 
@@ -215,5 +233,5 @@ back.addEventListener('click', resetQuiz);
 clear.addEventListener('click', clearScore);
 submit.addEventListener('click', function(){
     saveScore(score)
+    hide(noScore);
 });
-record.addEventListener(click(),saveScore);
